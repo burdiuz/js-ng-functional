@@ -24,31 +24,31 @@ export const createMixinComponentClass = () =>
     }
 
     ngOnInit(...args: any[]) {
-      lifeCycleCall(this, LifeCycle.INIT, ...args);
+      lifeCycleCall(this, LifeCycle.INIT, args);
     }
 
     ngOnChanges(...args: any[]) {
-      lifeCycleCall(this, LifeCycle.CHANGES, ...args);
+      lifeCycleCall(this, LifeCycle.CHANGES, args);
     }
 
     ngDoCheck(...args: any[]) {
-      lifeCycleCall(this, LifeCycle.CHECK, ...args);
+      lifeCycleCall(this, LifeCycle.CHECK, args);
     }
 
     ngAfterContentInit(...args: any[]) {
-      lifeCycleCall(this, LifeCycle.CONTENT_INIT, ...args);
+      lifeCycleCall(this, LifeCycle.CONTENT_INIT, args);
     }
 
     ngAfterContentChecked(...args: any[]) {
-      lifeCycleCall(this, LifeCycle.CONTENT_CHECKED, ...args);
+      lifeCycleCall(this, LifeCycle.CONTENT_CHECKED, args);
     }
 
     ngAfterViewInit(...args: any[]) {
-      lifeCycleCall(this, LifeCycle.VIEW_INIT, ...args);
+      lifeCycleCall(this, LifeCycle.VIEW_INIT, args);
     }
 
     ngAfterViewChecked(...args: any[]) {
-      lifeCycleCall(this, LifeCycle.VIEW_CHECKED, ...args);
+      lifeCycleCall(this, LifeCycle.VIEW_CHECKED, args);
     }
 
     ngOnDestroy() {
