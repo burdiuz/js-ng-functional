@@ -1,25 +1,16 @@
 import { Component } from '@angular/core';
 import { LifeCycle } from './lifecycle.enum';
-import { LifeCycleFn, BaseMixinComponent, ComponentClass } from './types';
+import { LifeCycleFn, ComponentClass } from './types';
 import { registerLifecycleFn } from './utils';
-import { createMixinComponent, setAugmentationFn } from './component';
+import { createMixinComponent } from './component';
+import { applyClassAugmentations } from './augmentations';
 
 const createLifecycleMixinFn = (method: LifeCycle) => (
-  component: BaseMixinComponent | Component,
+  component: Component | any,
   fn: LifeCycleFn,
   providers = []
 ) => {
-  let definition: ComponentClass;
-
-  if (
-    component &&
-    typeof component === 'function' &&
-    component.prototype instanceof BaseMixinComponent
-  ) {
-    definition = component as ComponentClass;
-  } else {
-    definition = createMixinComponent(component);
-  }
+  const definition: ComponentClass = createMixinComponent(component);
 
   registerLifecycleFn(definition as any, method, fn, providers);
 
@@ -64,12 +55,8 @@ const AUGMENTATIONS = {
   afterViewChecked: function (fn: LifeCycleFn, providers?: any[]) {
     return afterViewChecked(this, fn, providers);
   },
-
-  setComponent: function (component: Component) {
-    return Component(component)(this);
-  },
 };
 
-setAugmentationFn(
+applyClassAugmentations(
   (target: any): ComponentClass => Object.assign(target, AUGMENTATIONS)
 );

@@ -1,10 +1,5 @@
 import { Inject } from '@angular/core';
-import {
-  MixinClass,
-  LifeCycleFn,
-  IMixinComponent,
-  DestroyFn,
-} from './types';
+import { MixinClass, LifeCycleFn, IMixinComponent, DestroyFn } from './types';
 
 export const registerLifecycleFn = (
   definition: MixinClass,

@@ -7,9 +7,10 @@ export type LifeCycleFn = (
   ...dependencies: any[]
 ) => DestroyFn | void;
 
-interface LifeCycleMethods {
+export interface LifeCycleMethods {
   [key: string]: Array<{ lifeCycleFn: LifeCycleFn; providersFn: () => any[] }>;
 }
+
 
 export class BaseMixinComponent {}
 
