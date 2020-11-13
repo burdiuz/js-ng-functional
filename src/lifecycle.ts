@@ -3,29 +3,78 @@ import { LifeCycle } from './lifecycle.enum';
 import { LifeCycleFn, ComponentClass } from './types';
 import { registerLifecycleFn } from './utils';
 import { createMixinComponent } from './component';
-import { applyClassAugmentations } from './augmentations';
+import { addClassAugmentation } from './augmentations';
 
-const createLifecycleMixinFn = (method: LifeCycle) => (
+export function register<T>(
+  method: LifeCycle,
   component: Component | any,
   fn: LifeCycleFn,
   providers = []
-) => {
-  const definition: ComponentClass = createMixinComponent(component);
+) {
+  const definition = createMixinComponent<T>(component);
 
   registerLifecycleFn(definition as any, method, fn, providers);
 
-  return definition;
-};
+  return definition as ComponentClass<T>;
+}
 
-export const onInit = createLifecycleMixinFn(LifeCycle.INIT);
-export const onChanges = createLifecycleMixinFn(LifeCycle.CHANGES);
-export const doCheck = createLifecycleMixinFn(LifeCycle.CHECK);
-export const afterContentInit = createLifecycleMixinFn(LifeCycle.CONTENT_INIT);
-export const afterContentChecked = createLifecycleMixinFn(
-  LifeCycle.CONTENT_CHECKED
-);
-export const afterViewInit = createLifecycleMixinFn(LifeCycle.VIEW_INIT);
-export const afterViewChecked = createLifecycleMixinFn(LifeCycle.VIEW_CHECKED);
+export function onInit<T = any>(
+  component: Component | any,
+  fn: LifeCycleFn,
+  providers = []
+) {
+  const result = register<T>(LifeCycle.INIT, component, fn, providers);
+
+  return result;
+}
+
+export function onChanges<T = any>(
+  component: Component | any,
+  fn: LifeCycleFn,
+  providers = []
+) {
+  return register<T>(LifeCycle.CHANGES, component, fn, providers);
+}
+
+export function doCheck<T = any>(
+  component: Component | any,
+  fn: LifeCycleFn,
+  providers = []
+) {
+  return register<T>(LifeCycle.CHECK, component, fn, providers);
+}
+
+export function afterContentInit<T = any>(
+  component: Component | any,
+  fn: LifeCycleFn,
+  providers = []
+) {
+  return register<T>(LifeCycle.CONTENT_INIT, component, fn, providers);
+}
+
+export function afterContentChecked<T = any>(
+  component: Component | any,
+  fn: LifeCycleFn,
+  providers = []
+) {
+  return register<T>(LifeCycle.CONTENT_CHECKED, component, fn, providers);
+}
+
+export function afterViewInit<T = any>(
+  component: Component | any,
+  fn: LifeCycleFn,
+  providers = []
+) {
+  return register<T>(LifeCycle.VIEW_INIT, component, fn, providers);
+}
+
+export function afterViewChecked<T = any>(
+  component: Component | any,
+  fn: LifeCycleFn,
+  providers = []
+) {
+  return register<T>(LifeCycle.VIEW_CHECKED, component, fn, providers);
+}
 
 const AUGMENTATIONS = {
   onInit: function (fn: LifeCycleFn, providers?: any[]) {
@@ -57,6 +106,6 @@ const AUGMENTATIONS = {
   },
 };
 
-applyClassAugmentations(
-  (target: any): ComponentClass => Object.assign(target, AUGMENTATIONS)
+addClassAugmentation(
+  (target: any): ComponentClass<any> => Object.assign(target, AUGMENTATIONS)
 );

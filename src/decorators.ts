@@ -1,17 +1,21 @@
 import { Component, Input, Output } from '@angular/core';
 import { ComponentClass } from './types';
-import { applyClassAugmentations } from './augmentations';
+import { addClassAugmentation } from './augmentations';
 import { createMixinComponent } from './component';
 
-export const setComponent = (target: new () => any, component: Component) => {
-  return Component(component)(target);
-};
+export function setComponent(target: any, component: Component) {
+  const definition: ComponentClass = createMixinComponent(target);
 
-export const setInput = (
+  Component(component)(definition);
+
+  return definition;
+}
+
+export function setInput(
   component: Component | any,
   name: string,
   bindingPropertyName?: string
-) => {
+) {
   const definition: ComponentClass = createMixinComponent(component);
 
   const { prototype: target } = definition;
@@ -23,16 +27,20 @@ export const setInput = (
   );
 
   return definition;
-};
+}
 
-export const setInputs = (component: Component | any, ...names: string[]) =>
-  names.reduce((target, name) => setInput(target, name), component);
+export function setInputs(component: Component | any, ...names: string[]) {
+  return names.reduce(
+    (target, name) => setInput(target, name),
+    component
+  ) as ComponentClass;
+}
 
-export const setOutput = (
+export function setOutput(
   component: Component | any,
   name: string,
   bindingPropertyName?: string
-) => {
+) {
   const definition: ComponentClass = createMixinComponent(component);
 
   const { prototype: target } = definition;
@@ -44,17 +52,21 @@ export const setOutput = (
   );
 
   return definition;
-};
+}
 
-export const setOutputs = (component: Component | any, ...names: string[]) =>
-  names.reduce((target, name) => setOutput(target, name), component);
+export function setOutputs(component: Component | any, ...names: string[]) {
+  return names.reduce(
+    (target, name) => setOutput(target, name),
+    component
+  ) as ComponentClass;
+}
 
-export const setProp = <T = any>(
+export function setProp<T = any>(
   component: Component | any,
   name: string,
   getter: () => T,
   setter: (value: T) => void
-) => {
+) {
   const definition: ComponentClass = createMixinComponent(component);
 
   const { prototype: target } = definition;
@@ -67,13 +79,13 @@ export const setProp = <T = any>(
   });
 
   return definition;
-};
+}
 
-export const setMethod = (
+export function setMethod(
   component: Component | any,
   name: string,
   fn: (...args: any) => any
-) => {
+) {
   const definition: ComponentClass = createMixinComponent(component);
 
   const { prototype: target } = definition;
@@ -83,7 +95,7 @@ export const setMethod = (
   };
 
   return definition;
-};
+}
 
 const AUGMENTATIONS = {
   component: function (component: Component) {
@@ -118,6 +130,6 @@ const AUGMENTATIONS = {
   },
 };
 
-applyClassAugmentations(
+addClassAugmentation(
   (target: any): ComponentClass => Object.assign(target, AUGMENTATIONS)
 );

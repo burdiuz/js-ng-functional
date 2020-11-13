@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Type } from '@angular/core';
 
 export type DestroyFn = (component: any, ...dependencies: any[]) => void;
 
@@ -10,7 +10,6 @@ export type LifeCycleFn = (
 export interface LifeCycleMethods {
   [key: string]: Array<{ lifeCycleFn: LifeCycleFn; providersFn: () => any[] }>;
 }
-
 
 export class BaseMixinComponent {}
 
@@ -25,14 +24,26 @@ export interface IMixinComponent {
   $injections: any[];
 }
 
-export interface ComponentClass {
-  new (): any;
-  onInit(initFn: LifeCycleFn, providers?: any[]): ComponentClass;
-  onChanges(initFn: LifeCycleFn, providers?: any[]): ComponentClass;
-  doCheck(initFn: LifeCycleFn, providers?: any[]): ComponentClass;
-  afterContentInit(initFn: LifeCycleFn, providers?: any[]): ComponentClass;
-  afterContentChecked(initFn: LifeCycleFn, providers?: any[]): ComponentClass;
-  afterViewInit(initFn: LifeCycleFn, providers?: any[]): ComponentClass;
-  afterViewChecked(initFn: LifeCycleFn, providers?: any[]): ComponentClass;
-  setComponent(component: Component): ComponentClass;
+export interface ComponentClass<T = any> extends Type<T> {
+  onInit(initFn: LifeCycleFn, providers?: any[]): ComponentClass<T>;
+  onChanges(initFn: LifeCycleFn, providers?: any[]): ComponentClass<T>;
+  doCheck(initFn: LifeCycleFn, providers?: any[]): ComponentClass<T>;
+  afterContentInit(initFn: LifeCycleFn, providers?: any[]): ComponentClass<T>;
+  afterContentChecked(
+    initFn: LifeCycleFn,
+    providers?: any[]
+  ): ComponentClass<T>;
+  afterViewInit(initFn: LifeCycleFn, providers?: any[]): ComponentClass<T>;
+  afterViewChecked(initFn: LifeCycleFn, providers?: any[]): ComponentClass<T>;
+  component(component: Component): ComponentClass<T>;
+  input(name: string, bindingPropertyName?: string): ComponentClass<T>;
+  inputs(...names: string[]): ComponentClass<T>;
+  output(name: string, bindingPropertyName?: string): ComponentClass<T>;
+  outputs(...names: string[]): ComponentClass<T>;
+  prop<U = any>(
+    name: string,
+    getter: () => U,
+    setter: (value: U) => void
+  ): ComponentClass<T>;
+  method(name: string, fn: (...args: any) => any): ComponentClass<T>;
 }

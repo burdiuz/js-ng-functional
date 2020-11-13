@@ -1,15 +1,22 @@
 import { Component, OnDestroy } from '@angular/core';
 import { LifeCycle } from './lifecycle.enum';
-import { IMixinComponent, LifeCycleMethods, BaseMixinComponent } from './types';
+import {
+  IMixinComponent,
+  LifeCycleMethods,
+  BaseMixinComponent,
+  MixinClass,
+} from './types';
 import { lifeCycleCall } from './utils';
 import { applyClassAugmentations } from './augmentations';
+import { ComponentClass } from './types';
 
 const PARAMETERS = '__parameters__';
 
-const isMixinComponentClass = ({ $lifecycle, $providers }) =>
-  !!($lifecycle && $providers);
+export function isMixinComponentClass({ $lifecycle, $providers }) {
+  return !!($lifecycle && $providers);
+}
 
-const readClassProviders = ({ [PARAMETERS]: params, length }) => {
+export function readClassProviders({ [PARAMETERS]: params = [], length }) {
   const lc = [];
   lc.length = length;
 
@@ -24,13 +31,9 @@ const readClassProviders = ({ [PARAMETERS]: params, length }) => {
 
     return list;
   }, lc);
-};
+}
 
-const injectComponentClassMixin = (definition: any) => {
-  if (isMixinComponentClass(definition)) {
-    return definition;
-  }
-
+export function injectComponentClassMixin(definition: any): MixinClass {
   return class FnMixedComponent
     extends definition
     implements IMixinComponent, OnDestroy {
@@ -109,21 +112,28 @@ const injectComponentClassMixin = (definition: any) => {
       this.$destroy = [];
     }
   };
-};
+}
 
-export const createMixinComponentClass = () =>
-  injectComponentClassMixin(BaseMixinComponent);
+export function createMixinComponentClass() {
+  return injectComponentClassMixin(BaseMixinComponent);
+}
 
-export const createMixinComponent = (component: Component | any) => {
+export function createMixinComponent<T>(
+  component: Component | any
+): ComponentClass<T> & MixinClass {
   if (typeof component === 'function') {
-    return injectComponentClassMixin(component);
+    if (isMixinComponentClass(component)) {
+      return component as ComponentClass<T> & MixinClass;
+    }
+
+    return applyClassAugmentations<T>(injectComponentClassMixin(component));
   }
 
-  const definition = applyClassAugmentations(createMixinComponentClass());
+  const definition = applyClassAugmentations<T>(createMixinComponentClass());
 
   if (component) {
     return Component({ ...component })(definition);
   }
 
   return definition;
-};
+}
