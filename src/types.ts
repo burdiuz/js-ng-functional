@@ -1,4 +1,4 @@
-import { Component, Type } from '@angular/core';
+import { Component, Directive, Type } from '@angular/core';
 
 export type DestroyFn = (component: any, ...dependencies: any[]) => void;
 
@@ -36,6 +36,7 @@ export interface ComponentClass<T = any> extends Type<T> {
   afterViewInit(initFn: LifeCycleFn<T>, providers?: any[]): ComponentClass<T>;
   afterViewChecked(initFn: LifeCycleFn<T>, providers?: any[]): ComponentClass<T>;
   component(component: Component): ComponentClass<T>;
+  directive(directive: Directive): ComponentClass<T>;
   input(name: string, bindingPropertyName?: string): ComponentClass<T>;
   inputs(...names: string[]): ComponentClass<T>;
   output(name: string, bindingPropertyName?: string): ComponentClass<T>;

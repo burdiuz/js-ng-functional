@@ -11,7 +11,7 @@ export function NgOnChanges<T = any>(fn: LifeCycleFn<T>, providers?: any[]) {
   };
 }
 
-export function NgOnInit(fn: LifeCycleFn, providers?: any[]) {
+export function NgOnInit<T = any>(fn: LifeCycleFn<T>, providers?: any[]) {
   return function (definition: T) {
     mixIntoComponent<T>(definition);
 
@@ -19,7 +19,7 @@ export function NgOnInit(fn: LifeCycleFn, providers?: any[]) {
   };
 }
 
-export function NgDoCheck(fn: LifeCycleFn, providers?: any[]) {
+export function NgDoCheck<T = any>(fn: LifeCycleFn<T>, providers?: any[]) {
   return function (definition: T) {
     mixIntoComponent<T>(definition);
 
@@ -27,34 +27,61 @@ export function NgDoCheck(fn: LifeCycleFn, providers?: any[]) {
   };
 }
 
-export function NgAfterContentInit(fn: LifeCycleFn, providers?: any[]) {
+export function NgAfterContentInit<T = any>(
+  fn: LifeCycleFn<T>,
+  providers?: any[]
+) {
   return function (definition: T) {
     mixIntoComponent<T>(definition);
 
-    registerLifecycleFn(definition as any, LifeCycle.CHANGES, fn, providers);
+    registerLifecycleFn(
+      definition as any,
+      LifeCycle.CONTENT_INIT,
+      fn,
+      providers
+    );
   };
 }
 
-export function NgAfterContentChecked(fn: LifeCycleFn, providers?: any[]) {
+export function NgAfterContentChecked<T = any>(
+  fn: LifeCycleFn<T>,
+  providers?: any[]
+) {
   return function (definition: T) {
     mixIntoComponent<T>(definition);
 
-    registerLifecycleFn(definition as any, LifeCycle.CHANGES, fn, providers);
+    registerLifecycleFn(
+      definition as any,
+      LifeCycle.CONTENT_CHECKED,
+      fn,
+      providers
+    );
   };
 }
 
-export function NgAfterViewInit(fn: LifeCycleFn, providers?: any[]) {
+export function NgAfterViewInit<T = any>(
+  fn: LifeCycleFn<T>,
+  providers?: any[]
+) {
   return function (definition: T) {
     mixIntoComponent<T>(definition);
 
-    registerLifecycleFn(definition as any, LifeCycle.CHANGES, fn, providers);
+    registerLifecycleFn(definition as any, LifeCycle.VIEW_INIT, fn, providers);
   };
 }
 
-export function NgAfterViewChecked(fn: LifeCycleFn, providers?: any[]) {
+export function NgAfterViewChecked<T = any>(
+  fn: LifeCycleFn<T>,
+  providers?: any[]
+) {
   return function (definition: T) {
     mixIntoComponent<T>(definition);
 
-    registerLifecycleFn(definition as any, LifeCycle.CHANGES, fn, providers);
+    registerLifecycleFn(
+      definition as any,
+      LifeCycle.VIEW_CHECKED,
+      fn,
+      providers
+    );
   };
 }

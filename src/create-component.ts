@@ -4,6 +4,7 @@ import {
   IMixinComponent,
   LifeCycleMethods,
   BaseMixinComponent,
+  ComponentClass,
   MixinClass,
 } from './types';
 import {
@@ -13,7 +14,6 @@ import {
   lifeCycleCall,
 } from './utils';
 import { applyClassAugmentations } from './augmentations';
-import { ComponentClass } from './types';
 
 export function injectComponentClassMixin(definition: any): MixinClass {
   return class FnMixedComponent

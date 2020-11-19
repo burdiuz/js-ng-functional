@@ -1,4 +1,4 @@
-import { Component, Input, Output } from '@angular/core';
+import { Component, Directive, Input, Output } from '@angular/core';
 import { ComponentClass } from './types';
 import { addClassAugmentation } from './augmentations';
 import { createMixinComponent } from './create-component';
@@ -7,6 +7,13 @@ export function setComponent(target: any, component: Component) {
   const definition: ComponentClass = createMixinComponent(target);
 
   Component(component)(definition);
+
+  return definition;
+}
+export function setDirective(target: any, directive: Directive) {
+  const definition: ComponentClass = createMixinComponent(target);
+
+  Directive(directive)(definition);
 
   return definition;
 }
@@ -100,6 +107,9 @@ export function setMethod(
 const AUGMENTATIONS = {
   component: function (component: Component) {
     return setComponent(this, component);
+  },
+  directive: function (directive: Directive) {
+    return setDirective(this, directive);
   },
   input: function (name: string, bindingPropertyName?: string) {
     return setInput(this, name, bindingPropertyName);

@@ -1,5 +1,4 @@
-import { MixinClass } from './../dist/types.d';
-import { ComponentClass } from './types';
+import { ComponentClass, MixinClass } from './types';
 
 const classAugmentations: Array<(definition: any) => ComponentClass> = [];
 
