@@ -6,5 +6,5 @@ export enum LifeCycle {
   CONTENT_CHECKED = 'ngAfterContentChecked',
   VIEW_INIT = 'ngAfterViewInit',
   VIEW_CHECKED = 'ngAfterViewChecked',
-  // DESTROY = "ngOnDestroy" // Can't be added.
+  DESTROY = 'ngOnDestroy',
 }

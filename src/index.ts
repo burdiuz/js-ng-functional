@@ -15,5 +15,5 @@ export {
   setOutputs,
   setProp,
   setMethod,
-} from './decorators';
+} from './with-decorators';
 export { DestroyFn, LifeCycleFn, ComponentClass } from './types';

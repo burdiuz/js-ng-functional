@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { LifeCycle } from './lifecycle.enum';
 import { LifeCycleFn, ComponentClass } from './types';
 import { registerLifecycleFn } from './utils';
-import { createMixinComponent } from './component';
+import { createMixinComponent } from './create-component';
 import { addClassAugmentation } from './augmentations';
 
 export function register<T>(

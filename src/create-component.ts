@@ -6,53 +6,41 @@ import {
   BaseMixinComponent,
   MixinClass,
 } from './types';
-import { lifeCycleCall } from './utils';
+import {
+  isMixinComponentClass,
+  readClassProviders,
+  PARAMETERS,
+  lifeCycleCall,
+} from './utils';
 import { applyClassAugmentations } from './augmentations';
 import { ComponentClass } from './types';
-
-const PARAMETERS = '__parameters__';
-
-export function isMixinComponentClass({ $lifecycle, $providers }) {
-  return !!($lifecycle && $providers);
-}
-
-export function readClassProviders({ [PARAMETERS]: params = [], length }) {
-  const lc = [];
-  lc.length = length;
-
-  return params.reduce((list, param, index) => {
-    if (!param) {
-      return list;
-    }
-
-    const { token } = param.find((opt) => opt && opt.token) || {};
-
-    list[index] = token;
-
-    return list;
-  }, lc);
-}
 
 export function injectComponentClassMixin(definition: any): MixinClass {
   return class FnMixedComponent
     extends definition
     implements IMixinComponent, OnDestroy {
+    static [PARAMETERS] = definition[PARAMETERS];
     static readonly $lifecycle: LifeCycleMethods = {};
     static readonly $providers = readClassProviders(definition);
     $destroy: Array<() => void> = [];
     $injections: any[];
 
+    /* FIXME this possibly breaks injections for parent class, I believe angular compiler could not recognize them
+    properly so we have to copy __parameters__ property to this extended class.
+
+    Possible fix is on line 17.
+    */
     constructor(...injections: any[]) {
-      super();
+      super(...injections);
       this.$injections = injections;
     }
 
-    ngOnInit(...args: any[]) {
+    ngOnInit() {
       if (super.ngOnInit) {
-        super.ngOnInit(...args);
+        super.ngOnInit();
       }
 
-      lifeCycleCall(this, LifeCycle.INIT, args);
+      lifeCycleCall(this, LifeCycle.INIT);
     }
 
     ngOnChanges(...args: any[]) {
@@ -63,50 +51,52 @@ export function injectComponentClassMixin(definition: any): MixinClass {
       lifeCycleCall(this, LifeCycle.CHANGES, args);
     }
 
-    ngDoCheck(...args: any[]) {
+    ngDoCheck() {
       if (super.ngDoCheck) {
-        super.ngDoCheck(...args);
+        super.ngDoCheck();
       }
 
-      lifeCycleCall(this, LifeCycle.CHECK, args);
+      lifeCycleCall(this, LifeCycle.CHECK);
     }
 
-    ngAfterContentInit(...args: any[]) {
+    ngAfterContentInit() {
       if (super.ngAfterContentInit) {
-        super.ngAfterContentInit(...args);
+        super.ngAfterContentInit();
       }
 
-      lifeCycleCall(this, LifeCycle.CONTENT_INIT, args);
+      lifeCycleCall(this, LifeCycle.CONTENT_INIT);
     }
 
-    ngAfterContentChecked(...args: any[]) {
+    ngAfterContentChecked() {
       if (super.ngAfterContentChecked) {
-        super.ngAfterContentChecked(...args);
+        super.ngAfterContentChecked();
       }
 
-      lifeCycleCall(this, LifeCycle.CONTENT_CHECKED, args);
+      lifeCycleCall(this, LifeCycle.CONTENT_CHECKED);
     }
 
-    ngAfterViewInit(...args: any[]) {
+    ngAfterViewInit() {
       if (super.ngAfterViewInit) {
-        super.ngAfterViewInit(...args);
+        super.ngAfterViewInit();
       }
 
-      lifeCycleCall(this, LifeCycle.VIEW_INIT, args);
+      lifeCycleCall(this, LifeCycle.VIEW_INIT);
     }
 
-    ngAfterViewChecked(...args: any[]) {
+    ngAfterViewChecked() {
       if (super.ngAfterViewChecked) {
-        super.ngAfterViewChecked(...args);
+        super.ngAfterViewChecked();
       }
 
-      lifeCycleCall(this, LifeCycle.VIEW_CHECKED, args);
+      lifeCycleCall(this, LifeCycle.VIEW_CHECKED);
     }
 
     ngOnDestroy() {
       if (super.ngOnDestroy) {
         super.ngOnDestroy();
       }
+
+      lifeCycleCall(this, LifeCycle.DESTROY);
 
       this.$destroy.forEach((fn) => fn());
       this.$destroy = [];
