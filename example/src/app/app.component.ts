@@ -1,5 +1,5 @@
-import { Component, Type } from '@angular/core';
-import { onInit } from '../../../src/index';
+import { Component } from '@angular/core';
+import { onInit } from '../../../src/jit';
 
 @Component({
   selector: 'app-root',
@@ -10,26 +10,20 @@ export class AppComponent {
   title = 'example';
 }
 
-function generate() {
-  return Component({
-    selector: 'app-test',
-    template: '<span>{{label}}</span><span>{{text}}</span>',
-  })(
-    class SomethingComponent {
-      title = 'example';
-    }
-  );
-}
-
-export const TestComponent = generate();
-
-/*onInit(
+export const TestComponent = onInit(
   {
     selector: 'app-test',
-    template: '<span>{{label}}</span><span>{{text}}</span>',
+    template: '<span>{{label}}</span><span> {{text}}</span>',
   },
   (target) => {
+    console.log('ON INIT DECORATOR WORKS!');
     target.label = 'Example:';
   }
-);
-*/
+)
+  .onInit((target) => {
+    console.log('ANOTHER ON INIT DECORATOR WORKS!');
+  })
+  .onInit((target) => {
+    console.log('AND ANOTHER ON INIT DECORATOR WORKS!');
+  })
+  .input('text');

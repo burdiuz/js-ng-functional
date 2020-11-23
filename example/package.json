@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "start:jit": "ng serve --no-aot",
+    "build:jit": "ng build --prod --no-aot",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
